@@ -1,0 +1,41 @@
+@startuml
+object "af : CompagnieAerienne" as af {
+  nom = "Air France"
+}
+
+object "af04 : VolRegulier" as af04 {
+  numero = "AF-04"
+  jourSemaine = LUNDI
+}
+
+object "dep_af04_20090209 : DepartVol" as dep {
+  dateDepart = 2009-02-09
+  dateOuvertureRes = 2008-11-09
+  dateFermetureRes = 2009-02-08
+}
+
+object "res1 : Reservation" as res {
+  numero = "RES-2009-001"
+  dateReservation = 2009-01-15
+  etat = CONFIRMEE
+}
+
+object "remi : Client" as remi {
+  nom = "Bastide"
+  prenom = "Rémi"
+  numeroFrequentFlyer = "FF-987654"
+}
+
+object "bernard : Personne" as bernard {
+  nom = "Rigaud"
+  prenom = "Bernard"
+}
+
+af -- af04 : opère >
+af04 -- dep : est programmé pour >
+dep -- res : fait l'objet de >
+remi -- res : effectue >
+res -- remi : passagers >
+res -- bernard : passagers >
+
+@enduml
