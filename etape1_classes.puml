@@ -1,0 +1,51 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+enum JourSemaine {
+  LUNDI
+  MARDI
+  MERCREDI
+  JEUDI
+  VENDREDI
+  SAMEDI
+  DIMANCHE
+}
+
+class CompagnieAerienne {
+  - nom : String
+  + volsAuDepartDe(a : Aeroport) : Set<VolRegulier>
+}
+
+class VolRegulier {
+  - numero : String
+  - jourSemaine : JourSemaine
+  + aeroportDepart() : Aeroport
+  + aeroportArrivee() : Aeroport
+  + heureDepart() : LocalTime
+  + heureArrivee() : LocalTime
+  + dureeTotale() : Duration
+  + tempsEscale() : Duration
+}
+
+class Troncon {
+  - heureDepart : LocalTime
+  - heureArrivee : LocalTime
+  + duree() : Duration
+}
+
+class Aeroport {
+  - code : String
+  - nom : String
+}
+
+class Ville {
+  - nom : String
+}
+
+CompagnieAerienne "1" -- "0..*" VolRegulier : opère >
+VolRegulier "1" *-- "1..*" Troncon : {ordered} se compose de >
+Troncon "0..*" --> "1" Aeroport : depart
+Troncon "0..*" --> "1" Aeroport : arrivee
+Ville "1" -- "1..*" Aeroport : dessert >
+
+@enduml
