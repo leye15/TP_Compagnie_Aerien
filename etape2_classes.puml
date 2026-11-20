@@ -1,0 +1,91 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+enum JourSemaine {
+  LUNDI
+  MARDI
+  MERCREDI
+  JEUDI
+  VENDREDI
+  SAMEDI
+  DIMANCHE
+}
+
+enum EtatReservation {
+  EN_ATTENTE
+  CONFIRMEE
+  ANNULEE
+}
+
+class CompagnieAerienne {
+  - nom : String
+  + volsAuDepartDe(a : Aeroport) : Set<VolRegulier>
+  + definirPeriodeReservation(d : DepartVol, ouverture : LocalDate, fermeture : LocalDate) : void
+}
+
+class VolRegulier {
+  - numero : String
+  - jourSemaine : JourSemaine
+  + aeroportDepart() : Aeroport
+  + aeroportArrivee() : Aeroport
+  + heureDepart() : LocalTime
+  + heureArrivee() : LocalTime
+  + dureeTotale() : Duration
+  + tempsEscale() : Duration
+}
+
+class Troncon {
+  - heureDepart : LocalTime
+  - heureArrivee : LocalTime
+  + duree() : Duration
+}
+
+class Aeroport {
+  - code : String
+  - nom : String
+}
+
+class Ville {
+  - nom : String
+}
+
+class DepartVol {
+  - dateDepart : LocalDate
+  - dateOuvertureRes : LocalDate
+  - dateFermetureRes : LocalDate
+  + estOuvertReservation(date : LocalDate) : boolean
+  + nbPlacesReservees() : int
+  + listePassagers() : List<Personne>
+}
+
+class Reservation {
+  - numero : String
+  - dateReservation : LocalDate
+  - etat : EtatReservation
+  + confirmer() : void
+  + annuler() : void
+  + nbPlaces() : int
+}
+
+class Personne {
+  - nom : String
+  - prenom : String
+}
+
+class Client {
+  - numeroFrequentFlyer : String
+}
+
+CompagnieAerienne "1" -- "0..*" VolRegulier : opère >
+VolRegulier "1" *-- "1..*" Troncon : {ordered} se compose de >
+Troncon "0..*" --> "1" Aeroport : depart
+Troncon "0..*" --> "1" Aeroport : arrivee
+Ville "1" -- "1..*" Aeroport : dessert >
+
+VolRegulier "1" -- "0..*" DepartVol : est programmé pour >
+DepartVol "1" -- "0..*" Reservation : fait l'objet de >
+Client "1" -- "0..*" Reservation : effectue >
+Reservation "0..*" -- "1..*" Personne : passagers >
+Personne <|-- Client
+
+@enduml
